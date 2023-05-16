@@ -7,7 +7,7 @@
             <h2>Agregar Plan</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('productos.index') }}"> Back</a>
+            <a class="btn btn-primary" href="{{ route('planadd.index') }}"> Back</a>
         </div>
     </div>
 </div>
@@ -28,51 +28,34 @@
     </div>
 @endif
    
-<form action="{{ route('productos.store') }}" method="POST">
+<form action="{{ route('planadd.store') }}" method="POST">
     @csrf
   
      <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Tipo:</strong>
-                <input type="text" name="tipo" class="form-control" placeholder="Tipo">
+                <strong>Nombre:</strong>
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+            </div>
+        
+            <div class="form-group">
+                <strong>Descripción:</strong>
+                <input type="text"  id="descripcion" name="descripcion" class="form-control" placeholder="Descripción">
             </div>
             <div class="form-group">
-                <strong>Codigo Saleforce:</strong>
-               
-                <select name="codigoSalesforce" id="codigoSalesforce" class="form-control">
-                    @foreach ($PlanesSalesforces as $PlanesSalesforce)
-                    
-                        <option value="{{ $PlanesSalesforce->codigo }}">{{ $PlanesSalesforce->nombre }}</option>
-                       
-                        @endforeach
-                    
-                     
-                </select>
-           
-           
-            </div>
-            <div class="form-group">
-                <strong>Monto Titular:</strong>
-                <input type="text" readonly id="montoTitular" name="montoTitular" class="form-control" placeholder="Monto Titular">
-            </div>
-            <div class="form-group">
-                <strong>Monto Beneficiario:</strong>
-                <input type="text" readonly id="montoBeneficiario" name="montoBeneficiario" class="form-control" placeholder="Monto Beneficiario">
+                <strong>Precio:</strong>
+
+                <input type="text"  id="precio" pattern="[0-9\.]+" title="Solo se permiten números y puntos decimales"  name="precio" class="form-control" placeholder="Precio">
+
+
             </div>
             <div class="form-group">
                 <strong>Estado:</strong>
              
-                <input type="checkbox" value="1" id="estado" name="estado"  >
+                <input type="checkbox" value="1" id="estado" name="Estado"  >
 
             </div>
-           
-            <div class="form-group">
-                <strong>Default:</strong>
-               
-                <input type="checkbox" value="1"id="default"  name="default" {{$plan >= 1 ? 'disabled' : ''}} >
-
-            </div>
+          
         </div>
      
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -82,29 +65,5 @@
    
 </form>
 
-<script>
-    document.getElementById("codigoSalesforce").onchange = function() {
 
-        var codigoSalesforce = document.getElementById("codigoSalesforce").value;
-
-       var datos = {!! json_encode($PlanesSalesforces) !!};
-       for (let i = 0; i < datos.length; i++) {
-          
-
-                if(datos[i].codigo==codigoSalesforce){
-
-                    document.getElementById("montoTitular").value = datos[i].montoTitular;
-                 document.getElementById("montoBeneficiario").value =datos[i].montoAdicional;
-              
-                }
-
-
-
-            }
-
-   };
-
-
-
-</script>
 @endsection

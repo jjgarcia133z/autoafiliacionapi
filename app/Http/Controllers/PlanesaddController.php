@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Planesadd;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class PlanesaddController extends Controller
@@ -9,9 +10,19 @@ class PlanesaddController extends Controller
    
         public function index()
         {
-            $productos = Planesadd::all();
+    
+     
+         $planesadd = DB::table('planesadd')
+         ->select('*')
+    ///    ->where('estado', '=', 1)
+         ->get();
          
-            return view('productos.index',compact('productos'));
+
+
+         
+      ////   dd($planesadd);
+
+            return view('planesadd.index',compact('planesadd'));
                
         }
       
@@ -23,22 +34,9 @@ class PlanesaddController extends Controller
         public function create()
         {
             
-          $plan = DB::table('planes')
-          ->select('default')
-          ->where('default', '=', 1)
-          ->count();
-            //$PlanesSalesforces = PlanesSalesforce::all();
-           // dd($PlanesSalesforces);
-           
-    $PlanesSalesforces = DB::table('planes_salesforces')
-                ->select('id', 'codigo','nombre','montoTitular','montoAdicional')
-                ->get();
-    //(/)        RENAME TABLE planes_salesforce TO planes_salesforces;
     
     
-           
-    
-            return view('productos.create',compact('PlanesSalesforces','plan'));
+            return view('planesadd.create');
         }
       
         /**
@@ -53,35 +51,76 @@ class PlanesaddController extends Controller
                // 'name' => 'required',
               //  'detail' => 'required',
             //]);
-          
+            /*
+            <td>{{ $planesad->fecha_creacion }}</td>
+            <td>{{ $planesad->creado }}</td>
+            <td>{{ $planesad->fecha_modificacion }}</td>
+            <td>{{ $planesad->modificado }}</td>
+            <td>{{ $planesad->empresa }}</td>
+            */
+
+            $hoy = date("Ymdhis");
+            $creado="jgarcia";
+            $empresa="Hospital Metropolitalo";
+
+            $estado = DB::table('planesadd')
+            ->select('*')
+            ->where('estado', '=', 1)
+            ->count();
+  if($request->estado==1){
+  if($estado>=1){
+
+
+            DB::table('planesadd')->insert([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'estado' => 0,
+                'fecha_creacion'=> $hoy,
+               'creado'=> $creado,
+                //'fecha_modificacion'=> $request->Estado,
+                //'modificado'=> $request->Estado,
+                'empresa'=> $empresa,
+            ]);
+        }
+          else{
+            DB::table('planesadd')->insert([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'estado' => $request->estado,
+                'fecha_creacion'=> $hoy,
+               'creado'=> $creado,
+                //'fecha_modificacion'=> $request->Estado,
+                //'modificado'=> $request->Estado,
+                'empresa'=> $empresa,
+            ]);
+
+
+          }
+      
+        }else{
+            DB::table('planesadd')->insert([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'estado' => $request->estado,
+                'fecha_creacion'=> $hoy,
+               'creado'=> $creado,
+                //'fecha_modificacion'=> $request->Estado,
+                //'modificado'=> $request->Estado,
+                'empresa'=> $empresa,
+            ]);
+
+
+
+
+
+        }
+        return redirect()->route('planadd.index')
+        ->with('success','plan created successfully.');
     
-    
-          
-          $plan = DB::table('planes')
-          ->select('default')
-          ->where('default', '=', 1)
-          ->count();
-          
-    
-    if($plan==0){
-        Planes::create($request->all());
-        return redirect()->route('productos.index')
-        ->with('success','Product created successfully.');
-    }else{
-    
-    
-        $PlanesSalesforces = DB::table('planes_salesforces')
-                ->select('id', 'codigo','nombre','montoTitular','montoAdicional')
-                ->get();
-    
-    $message="err0r";
-    
-        return view('productos.create',compact('PlanesSalesforces','message'));
-    
-    
-    
-    }
-    
+ 
            
           
         }
@@ -100,10 +139,14 @@ class PlanesaddController extends Controller
          * @param  \App\Models\Product  $product
          * @return \Illuminate\Http\Response
          */
-        public function edit(Product $product)
+        public function edit( $id)
         {
-            dd($product);
-            return view('productos.edit',compact('product'));
+           
+                $planadd = DB::table('planesadd')
+                ->select('*')
+                ->where('id', '=', $id)
+                ->first();
+            return view('planesadd.edit',compact('planadd'));
         }
       
         /**
@@ -113,17 +156,88 @@ class PlanesaddController extends Controller
          * @param  \App\Models\Product  $product
          * @return \Illuminate\Http\Response
          */
-        public function update(Request $request, Product $product)
+        public function update(Request $request,$id)
         {
-            $request->validate([
-                'name' => 'required',
-                'detail' => 'required',
-            ]);
-          
-            $product->update($request->all());
-          
-            return redirect()->route('productos.index')
-                            ->with('success','Product updated successfully');
+            ///dd($request);
+            $hoy = date("Ymdhis");
+            $modificado="jgarcia";
+          ///  $empresa="Hospital Metropolitalo";
+          $estado = DB::table('planesadd')
+          ->select('*')
+          ->where('estado', '=', 1)
+          ->count();
+   ///   dd($request);
+          if($request->estado==1){
+
+if($estado>=1){
+
+
+
+            DB::table('planesadd')->where('id', '=', $id)->update(
+    
+                ['nombre' => $request->name,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'fecha_modificacion'=> $hoy,
+               'modificado'=> $modificado,
+                ///'empresa'=> $empresa,
+                'estado' => 0
+                ]
+            );
+
+
+
+        }else{
+
+
+            DB::table('planesadd')->where('id', '=', $id)->update(
+    
+                ['nombre' => $request->name,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'fecha_modificacion'=> $hoy,
+               'modificado'=> $modificado,
+             //    'empresa'=> $empresa,
+                'estado' => 1
+                ]
+            );
+
+        }
+
+
+    }else{
+
+        DB::table('planesadd')->where('id', '=', $id)->update(
+    
+            ['nombre' => $request->name,
+            'descripcion' => $request->descripcion,
+            'precio' => $request->precio,
+            'fecha_modificacion'=> $hoy,
+           'modificado'=> $modificado,
+            ///'empresa'=> $empresa,
+            'estado' => 0
+            ]
+        );
+
+
+
+    }
+
+
+            
+         $planesadd = DB::table('planesadd')
+         ->select('*')
+    ///    ->where('estado', '=', 1)
+         ->get();
+         
+
+
+         
+      ////   dd($planesadd);
+
+            return view('planesadd.index',compact('planesadd'));
+          ///  return redirect()->route('planesadd.index')
+             ///               ->with('success','Product updated successfully');
         }
         /**
          * Remove the specified resource from storage.
@@ -133,14 +247,12 @@ class PlanesaddController extends Controller
          */
         public function destroy($product)
         {
-            $product = Planes::find($product);
-     
-    $product->delete();
-           
-            return redirect()->route('productos.index')
+            DB::table('planesadd')->where('id', $product)->delete();
+            return redirect()->route('planadd.index')
                             ->with('success','Plan  Eliminado Correcto');
         }
     
     
     
 }
+

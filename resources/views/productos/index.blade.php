@@ -22,23 +22,44 @@
         <tr>
             <th>No</th>
             <th>Tipo</th>
-            <th>Codigo Salesforce</th>
+   
             <th>Monto Titular</th>
             <th>Monto Beneficiario</th>
+            <th>Monto Mascota</th>
+            <th>Fecha Creacion</th>
+            <th>Creado Por </th>
+           
+            <th>Fecha Modificación</th>
+            <th>Modificado Por </th>
+
             <th>Estado</th>
             <th>Default</th>
             <th width="280px">Action</th>
         </tr>
         @foreach ($productos as $product)
         <tr>
-            <td>.</td>
+        <td>{{ $product->id }}</td>
             <td>{{ $product->tipo }}</td>
-            <td>{{ $product->codigoSalesforce }}</td>
+ 
             <td>{{ $product->montoTitular }}</td>
             <td>{{ $product->montoBeneficiario }}</td>
-            <td><input readonly type="checkbox" {{$product->estado == 1 ? 'checked' : ''}} ></td>
-            <td><input readonly type="checkbox" {{$product->default == 1 ? 'checked' : ''}} ></td>
+            <td>{{ $product->montoMascota }}</td>
 
+            <td>{{ $product->fechacreado }}</td>
+            <td>{{ $product->creado }}</td>
+            <td>{{ $product->fechamodifica }}</td>
+            <td>{{ $product->modificado }}</td>
+
+            @if ($product->estado==1)
+    <td style="color: green;">Activo</td>
+@else
+    <td style="color: red;">Inactivo</td>
+@endif
+@if ($product->default==1)
+    <td style="color: green;">Activo</td>
+@else
+    <td style="color: red;">Inactivo</td>
+@endif
 
           
 
@@ -46,20 +67,21 @@
                 <form action="{{ route('productos.destroy',$product->id) }}" method="POST">
    
                    
-                    <a class="btn btn-primary" href="{{ route('productos.edit',$product->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('productos.edit',$product) }}">Edit</a>
                    
                     
                     @csrf
-                    @method('DELETE')
+                   
       
-                    <button type="submit" href="{{ route('productos.destroy',$product->id) }}" class="btn btn-danger">Delete</button>
+                
+                
                 </form>
             </td>
         </tr>
         @endforeach
     </table>
-  {{  $pdfUrl = asset('pdfs/1.pdf')}}
-    <embed src="{{ $pdfUrl }}" type="application/pdf" width="100%" height="600px" />
-    <a href="{{ $pdfUrl }}" target="_blank"><img src="{{ asset('path/to/pdf/thumbnail.jpg') }}" /></a>
 
+
+
+ <h5>Los precion deben de tener el IVA incluido</h5> 
 @endsection

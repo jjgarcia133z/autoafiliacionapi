@@ -34,17 +34,24 @@ class ProductController extends Controller
         
       $plan = DB::table('planes')
       ->select('default')
-      ->where('default', '=', 1)
+      //->where('default', '=', 1)
       ->count();
         //$PlanesSalesforces = PlanesSalesforce::all();
-       // dd($PlanesSalesforces);
+       if($plan>4){
        
-$PlanesSalesforces = DB::table('planes_salesforces')
-            ->select('id', 'codigo','nombre','montoTitular','montoAdicional')
-            ->get();
+        $PlanesSalesforces = DB::table('planes_salesforces')
+        ->select('id', 'codigo','nombre','montoTitular','montoAdicional')
+        ->get();
 
 
-        return view('productos.create',compact('PlanesSalesforces','plan'));
+    return view('productos.create',compact('PlanesSalesforces','plan'));
+       }else{
+        $productos = Planes::all();
+     
+        return view('productos.index',compact('productos'));
+
+       }
+
     }
   
     /**
@@ -55,42 +62,121 @@ $PlanesSalesforces = DB::table('planes_salesforces')
      */
     public function store(Request $request)
     {
-      //  $request->validate([
-           // 'name' => 'required',
-          //  'detail' => 'required',
-        //]);
-      
+    
+        $hoy = date("Ymdhis");
+        $creado="jgarcia";
+        //$request->fechacreado=$hoy;
 
+        $request->merge(['fechacreado' => $hoy]);
+        $request->merge(['creado' => $creado]);
 
+        $request->merge(['frecuencia' => 3]);
+        
+    ///dd($request);
+
+    if($request->ahorro==1){
+
+        $ahorro1 = DB::table('planes')
+        ->select('ahorro')
+        ->where('ahorro', '=', 1)
+        ->count();
       
-      $plan = DB::table('planes')
+      ///  dd($plan+"1");
+    if($ahorro1==1){
+    
+    
+    
+    $ahorro=0;
+    
+    
+    
+    
+    
+    }else{
+    
+        $ahorro=1;
+       
+    }
+    
+    }
+      ////////////////////////
+      $default = DB::table('planes')
       ->select('default')
       ->where('default', '=', 1)
       ->count();
       
 
-if($plan==0){
-    Planes::create($request->all());
+      if($request->default==1){
+   
+      
+        if($default>=1){
+
+            $request->default=0;
+
+           
+           //// Planes::create($request->all());
+            DB::table('planes')->insert([
+                'tipo' => $request->tipo,
+                'montoTitular' => $request->montoTitular,
+                'montoBeneficiario' => $request->montoBeneficiario,
+                'montoMascota' => $request->montoMascota,
+                'frecuencia' => $request->frecuencia,
+                'estado' => $request->estado,
+                'default'=>0,
+                'ahorro'=>$ahorro,
+                'fechacreado'=> $request->fechacreado,
+               'creado'=>$request->creado,
+       
+            ]);
+        }else{
+
+            DB::table('planes')->insert([
+                'tipo' => $request->tipo,
+                'montoTitular' => $request->montoTitular,
+                'montoBeneficiario' => $request->montoBeneficiario,
+                'montoMascota' => $request->montoMascota,
+                'frecuencia' => $request->frecuencia,
+                'estado' => $request->estado,
+                'ahorro'=>$ahorro,
+                'default'=>1,
+                'fechacreado'=> $request->fechacreado,
+               'creado'=>$request->creado,
+       
+            ]);
+
+
+
+        }
+   
+   
+
+    }else{
+        DB::table('planes')->insert([
+            'tipo' => $request->tipo,
+            'montoTitular' => $request->montoTitular,
+            'montoBeneficiario' => $request->montoBeneficiario,
+            'montoMascota' => $request->montoMascota,
+            'frecuencia' => $request->frecuencia,
+            'estado' => $request->estado,
+            'ahorro'=>$ahorro,
+            'default'=>$request->default,
+            'fechacreado'=> $request->fechacreado,
+           'creado'=>$request->creado,
+   
+        ]);
+
+
+
+    }
     return redirect()->route('productos.index')
     ->with('success','Product created successfully.');
-}else{
-
-
-    $PlanesSalesforces = DB::table('planes_salesforces')
-            ->select('id', 'codigo','nombre','montoTitular','montoAdicional')
-            ->get();
-
-$message="err0r";
-
-    return view('productos.create',compact('PlanesSalesforces','message'));
-
 
 
 }
 
        
       
-    }
+    
   
     /**
      * Display the specified resource.
@@ -106,10 +192,19 @@ $message="err0r";
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($product)
     {
-        //dd($product);
-        return view('productos.edit',compact('product'));
+   /// return ($product);
+    //7///$product = Planes::find($product)->get();
+
+    $products = DB::table('planes')
+    ->select('*')
+      ->where('id', '=', $product)
+    ->first();
+
+   
+
+        return view('productos.edit',compact('products'));
     }
   
     /**
@@ -119,18 +214,88 @@ $message="err0r";
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'detail' => 'required',
-        ]);
+
+$defaul=0;
+$ahorro=0;
+$hoy = date("Ymdhis");
+$modificado="jgarcia";
+if($request->ahorro==1){
+
+    $ahorro1 = DB::table('planes')
+    ->select('ahorro')
+    ->where('ahorro', '=', 1)
+    ->count();
+  
+  ///  dd($plan+"1");
+if($ahorro1==1){
+
+
+
+$ahorro=0;
+
+
+
+
+
+}else{
+
+    $ahorro=1;
+   
+}
+
+}
+
+    if($request->default==1){
+
+        $plan = DB::table('planes')
+        ->select('default')
+        ->where('default', '=', 1)
+        ->count();
       
-        $product->update($request->all());
+      ///  dd($plan+"1");
+if($plan==1){
+
+
+
+    $defaul=0;
+
+
+
+
+
+    }else{
+
+        $defaul=1;
+       
+    }
+
+}
+
+
+
+
+    DB::table('planes')->where('id', '=', $id)->update(
+    
+        ['tipo' => $request->tipo,
+        'montoTitular' => $request->montoTitular,
+        'montoBeneficiario' => $request->montoBeneficiario,
+        'estado' => $request->estado,
+        'default' => $defaul,
+        'fechamodifica'=>$hoy,
+        'montoMascota'=> $request->montoMascota,
+        'ahorro'=> $ahorro,
+        'modificado'=>$modificado
+        ]
+    );
+
+ //  $product->update($request->all());
       
         return redirect()->route('productos.index')
                         ->with('success','Product updated successfully');
-    }
+ 
+}
     /**
      * Remove the specified resource from storage.
      *
@@ -139,6 +304,8 @@ $message="err0r";
      */
     public function destroy($product)
     {
+
+      //  dd();
         $product = Planes::find($product);
  
 $product->delete();
@@ -147,4 +314,5 @@ $product->delete();
                         ->with('success','Plan  Eliminado Correcto');
     }
 }
+
 

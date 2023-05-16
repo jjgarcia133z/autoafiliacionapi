@@ -37,40 +37,33 @@
                 <strong>Tipo:</strong>
                 <input type="text" name="tipo" class="form-control" placeholder="Tipo">
             </div>
-            <div class="form-group">
-                <strong>Codigo Saleforce:</strong>
-               
-                <select name="codigoSalesforce" id="codigoSalesforce" class="form-control">
-                    @foreach ($PlanesSalesforces as $PlanesSalesforce)
-                    
-                        <option value="{{ $PlanesSalesforce->codigo }}">{{ $PlanesSalesforce->nombre }}</option>
-                       
-                        @endforeach
-                    
-                     
-                </select>
            
-           
-            </div>
             <div class="form-group">
                 <strong>Monto Titular:</strong>
-                <input type="text" readonly id="montoTitular" name="montoTitular" class="form-control" placeholder="Monto Titular">
+                <input type="text"  id="montoTitular" name="montoTitular" pattern="[0-9\.]+" title="Solo se permiten números y puntos decimales"  class="form-control" placeholder="Monto Titular">
             </div>
             <div class="form-group">
                 <strong>Monto Beneficiario:</strong>
-                <input type="text" readonly id="montoBeneficiario" name="montoBeneficiario" class="form-control" placeholder="Monto Beneficiario">
+                <input type="text"  id="montoBeneficiario" pattern="[0-9\.]+" title="Solo se permiten números y puntos decimales"  name="montoBeneficiario" class="form-control" placeholder="Monto Beneficiario">
+            </div>
+            <div class="form-group">
+                <strong>Monto mascota:</strong>
+                <input type="text"  id="montoMascota" pattern="[0-9\.]+" title="Solo se permiten números y puntos decimales"  name="montoMascota" class="form-control" placeholder="Monto Mascota">
             </div>
             <div class="form-group">
                 <strong>Estado:</strong>
-             
                 <input type="checkbox" value="1" id="estado" name="estado"  >
 
+            </div>
+            <div class="form-group">
+                <strong>Ahorro:</strong>
+                <input type="checkbox" value="1" id="ahorro" name="ahorro"  >
             </div>
            
             <div class="form-group">
                 <strong>Default:</strong>
                
-                <input type="checkbox" value="1"id="default"  name="default" {{$plan >= 1 ? 'disabled' : ''}} >
+                <input type="checkbox" value="1"id="default"  name="default" >
 
             </div>
         </div>
@@ -82,29 +75,5 @@
    
 </form>
 
-<script>
-    document.getElementById("codigoSalesforce").onchange = function() {
 
-        var codigoSalesforce = document.getElementById("codigoSalesforce").value;
-
-       var datos = {!! json_encode($PlanesSalesforces) !!};
-       for (let i = 0; i < datos.length; i++) {
-          
-
-                if(datos[i].codigo==codigoSalesforce){
-
-                    document.getElementById("montoTitular").value = datos[i].montoTitular;
-                 document.getElementById("montoBeneficiario").value =datos[i].montoAdicional;
-              
-                }
-
-
-
-            }
-
-   };
-
-
-
-</script>
 @endsection

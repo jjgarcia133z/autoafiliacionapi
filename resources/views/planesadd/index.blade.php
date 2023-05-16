@@ -4,10 +4,10 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Planes</h2>
+                <h2>Planes Adicionales</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('productos.create') }}"> Crear Un nuevo Plan </a>
+                <a class="btn btn-success" href="{{ route('planadd.create') }}"> Crear Un nuevo Plan </a>
             </div>
         </div>
     </div>
@@ -21,43 +21,55 @@
     <table class="table table-bordered">
         <tr>
             <th>No</th>
-            <th>Tipo</th>
-            <th>Codigo Salesforce</th>
-            <th>Monto Titular</th>
-            <th>Monto Beneficiario</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Fecha Creacion</th>
+            <th>Creado Por </th>
+           
+            <th>Fecha Modificación</th>
+            <th>Modificado Por </th>
+            <th>Precio</th>
             <th>Estado</th>
-            <th>Default</th>
+
             <th width="280px">Action</th>
         </tr>
-        @foreach ($productos as $product)
+        @foreach ($planesadd as $planesad)
         <tr>
-            <td>.</td>
-            <td>{{ $product->tipo }}</td>
-            <td>{{ $product->codigoSalesforce }}</td>
-            <td>{{ $product->montoTitular }}</td>
-            <td>{{ $product->montoBeneficiario }}</td>
-            <td><input readonly type="checkbox" {{$product->estado == 1 ? 'checked' : ''}} ></td>
-            <td><input readonly type="checkbox" {{$product->default == 1 ? 'checked' : ''}} ></td>
+            <td>{{ $planesad->id}}</td>
+            <td>{{ $planesad->nombre }}</td>
+            <td>{{ $planesad->descripcion }}</td>
 
+            <td>{{ $planesad->fecha_creacion }}</td>
+            <td>{{ $planesad->creado }}</td>
+            <td>{{ $planesad->fecha_modificacion }}</td>
+            <td>{{ $planesad->modificado }}</td>
+           
+            <td>{{ $planesad->precio }}</td>
+            @if ($planesad->estado==1)
+    <td style="color: green;">Activo</td>
+@else
+    <td style="color: red;">Inactivo</td>
+@endif
 
           
 
             <td>
-                <form action="{{ route('productos.destroy',$product->id) }}" method="POST">
+                <form action="{{ route('planadd.destroy',$planesad->id) }}" method="POST">
    
                    
-                    <a class="btn btn-primary" href="{{ route('productos.edit',$product->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('planadd.edit',$planesad->id) }}">Editar</a>
                    
                     
                     @csrf
-                    @method('DELETE')
-      
-                    <button type="submit" href="{{ route('productos.destroy',$product->id) }}" class="btn btn-danger">Delete</button>
+              
+                 
+               
+               
                 </form>
             </td>
         </tr>
         @endforeach
     </table>
-  
+ <h5>Los precion deben de tener el IVA incluido</h5>  
    
 @endsection
