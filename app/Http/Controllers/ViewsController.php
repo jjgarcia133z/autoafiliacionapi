@@ -68,9 +68,54 @@ $data=json_encode($dataSF);
     
         //cerrar conexion
         curl_close($ch);
-    
+        $array = json_decode($responseSF, true);
+
+        $subtotalsiniva=0;
+  if( isset($array["costoPlan"])){
+    $totalIva = $array["costoPlan"]* 0.13;
+    $Totalivam=$totalIva+$array["costoPlan"];
+
+///     dd($totalIva);
+ $array['iva'] =$totalIva;
+
+ $array['totaiva'] =$Totalivam;
+ $array['frecuencia'] =$request->frecuenciaPago;
+
+}
+
+$porcentaje= $array["oportunidad"]["OPDescuento"]/100;
+
+
+    $descuento= $subtotalsiniva*$porcentaje;
+
+    $subtotacondescuento=$subtotalsiniva-$descuento;
+    $ivaProrateo=$subtotacondescuento*0.13;
+
+    $totalconiva=$subtotacondescuento+$ivaProrateo;
+
+
+$Prorateoivas=($array['montoProrateo']*0.13)+($array['montoProrateo']);
+    $array['subtotalsiniva']=$subtotalsiniva;
+
+$array['prorateiva']=$Prorateoivas;
+
+
+        $array['porcentaje']=$porcentaje;
+
+        $array['descuento']=$descuento;
+        $array['subtotacondescuento']=$subtotacondescuento;
+
+        $array['ivaProrateo']=$ivaProrateo;
+
+        $array['totalconiva']=$totalconiva;
+        $array['frecuenciaPago']=$request->rebajoDias;
+
+
+
+
       /// return $responseSF;
-     return json_decode($responseSF,true);
+      return Response::json(['status'=>1 ,json_encode($array)], 201);
+
 
        
  
