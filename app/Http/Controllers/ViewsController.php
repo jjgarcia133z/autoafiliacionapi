@@ -1040,7 +1040,7 @@ function agoFactura(Request $request){
 
 
 
-        return Response::json(['status' => 1, 'guardado con existo'], 403);
+        return Response::json(['status' => 1, 'guardado con existo'], 200);
 
     }
 
