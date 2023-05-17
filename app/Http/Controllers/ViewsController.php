@@ -925,7 +925,7 @@ function agoFactura(Request $request){
             }
         }
         /// dd($request->promociones);
-        if (isset($request->promociones)) {
+        if (isset($request->promocion)) {
 
 
 
@@ -934,15 +934,19 @@ function agoFactura(Request $request){
             //    "idPromocion": "0002",
             //    "cantidadMeses": 1
 
-            $array = $request->promociones;
+            $array = $request->promocion;
 
+            DB::table('promociones')
+            ->where('cedulatitular', $request->cedula)
+            ->delete();
 
-            ///dd($array);
+          ///  dd($array);
             foreach ($array as $key => $value) {
+           ///   dd($value['idPromocion']);
                 $promo = promociones::where('idPromocion', '=', $value['idPromocion'])->first();
                 //  $tamaño = $cedula->count();
 
-                //   dd($promo);
+                  
                 ///  echo($nombremas);
                 if ($promo) {
 
