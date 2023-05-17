@@ -114,7 +114,7 @@ $array['prorateiva']=$Prorateoivas;
 
 
       /// return $responseSF;
-      return Response::json(['status'=>1 ,json_encode($array)], 201);
+      return Response::json(($array), 201);
 
 
        
