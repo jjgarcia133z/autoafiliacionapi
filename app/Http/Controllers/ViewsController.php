@@ -775,7 +775,9 @@ function agoFactura(Request $request){
 
             $array = $request->beneficiarios;
 
-
+            DB::table('beneficiarios')
+            ->where('cedulatitular', $request->cedula)
+            ->delete();
             foreach ($array as $key => $value) {
                 $cedulabn = beneficiario::where('cedula', '=', $value['cedula'])->first();
                 //  $tamaño = $cedula->count();
@@ -863,17 +865,21 @@ function agoFactura(Request $request){
         }
         if (isset($request->mascotas)) {
 
+            DB::table('mascotas')
+            ->where('cedulatitular', $request->cedula)
+            ->delete();
+
             $array = $request->mascotas;
             // dd($array);
             foreach ($array as $key => $value) {
                 $nombremas = mascota::where('nombremascota', '=', $value['nombreMascota'])->first();
                 //  $tamaño = $cedula->count();
 
-                ///  dd($nombremas);
+                 
                 ///  echo($nombremas);
                 if ($nombremas) {
 
-
+                   /// dd($nombremas);
                     $nombremas->especie = $value['especie'] ?? "";
                     $nombremas->nombremascota = $value['nombreMascota'] ?? "";
                     $nombremas->raza = $value['raza'] ?? "";
