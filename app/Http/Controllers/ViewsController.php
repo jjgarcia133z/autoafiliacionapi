@@ -71,6 +71,11 @@ $data=json_encode($dataSF);
         $array = json_decode($responseSF, true);
 
         $subtotalsiniva=0;
+        foreach ($array["oportunidad"]["OPLineas"] as $element) {
+            ///(///) dd($element["precio"]);
+             $subtotalsiniva=$subtotalsiniva+$element["precio"];
+         }
+         
   if( isset($array["costoPlan"])){
     $totalIva = $array["costoPlan"]* 0.13;
     $Totalivam=$totalIva+$array["costoPlan"];
