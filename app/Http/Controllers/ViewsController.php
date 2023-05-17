@@ -2924,8 +2924,7 @@ $array['prorateiva']=$Prorateoivas;
                     $array['frecuenciaPago']=$request->rebajoDias;
 
                  
-                       return Response::json(['status'=>1 ,json_encode($array)], 201);
-                
+                    return Response::json(($array), 201);
 
 
 
