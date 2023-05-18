@@ -1990,7 +1990,7 @@ if($afiliado->count() == 1){
         return $mergedJson;
 }else{
 
-   return Response::json(['status'=>0 ,'no existe'], 403);
+   return Response::json(['status'=>0 ,'no existe'], 200);
 }
     }
 
