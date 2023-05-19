@@ -146,22 +146,56 @@ public function getcontrato($cedula){
         ->select('*')
           ->where('cedula', '=', $cedula)
         ->get();
-
+        
   
     $Nombre=$afiliado[0]->nombrecompleto;
    // return($Nombre);
 
      ///   $Nombre = 'Jonathan García Alfaro';
-        $Nacionalidad = $afiliado[0]->nacionalidad;
+        $Nacionalidad = $afiliado[0]->nacionalidad  == "n/a" ? " " : $afiliado[0]->nacionalidad  ;
+
+
+       
         $EstadoCivil = $afiliado[0]->estadocivil;
+
+
+        
+        if($EstadoCivil=="1"){
+$EstadoCivil="Soltero(a)";
+        }
+        if($EstadoCivil=="2"){
+            $EstadoCivil="Casado(a)";
+                    }
+                    if($EstadoCivil=="3"){
+                        $EstadoCivil="Divorciado(a)";
+                                }
+                                if($EstadoCivil=="4"){
+                                    $EstadoCivil="Viudo(a)";
+                                            }
+                                            if($EstadoCivil=="5"){
+                                                $EstadoCivil="Unión Libre";
+                                                        }
+
+            
         $vecino=$afiliado[0]->direccion;
         $profesion=$afiliado[0]->profesion;
-        $cedula =$cedula;
+
+
+       
+
+        $profesion = DB::table('profesion')
+        ->select('value')
+          ->where('id', '=', $profesion)
+        ->get();
+      $profesion=  $profesion[0]->value;
+
+
+     //   $cedula =$cedula;
         $dia=$day;
         $mes=$month;
         $ano=$year;
 
-
+       /// dd($afiliado);
 
     $html =View::make('invoice' )->withnombre($Nombre)->withnacionalidad($Nacionalidad)
  
@@ -462,14 +496,14 @@ function pagoFactura1(Request $request){
         );
 
 
-///      return view('invoice')->with($data);
+      return view('carnet')->with($data);
 
 
 
-        $pdf = PDF::loadView('invoice', ['invoice' => $data] );
+      ///  $pdf = PDF::loadView('carnet', ['carnet' => $data] );
 
       ///  $pdf->loadHTML('<h1>Test</h1>');
-        return $pdf->stream();
+       //7 return $pdf->stream();
 
     }
 
